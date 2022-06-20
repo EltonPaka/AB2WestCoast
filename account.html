@@ -121,18 +121,99 @@
           <h2>My Profile</h2>
         </div>
         <div class="card-body">
-          <h5 class="card-title">Elton Paka</h5>
+          <h5 id="Name" class="card-title"></h5>
           <div class="card" style="width: 18rem;">
             <img class="card-img-top" src="./blank.png" alt="Card image cap">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">Email: eltpaka@amazon.com</li>
-              <li class="list-group-item">Phome: 7777777</li>
-              <li class="list-group-item">Address: Amazon Web Services, 78 Roeland Street, Gardens, Cape Town, Western Cape, 8001</li>
+              <li class="list-group-item">Phone: <p id="Phone"></p></li>
+              <li class="list-group-item">Address: <p id="address"></p></li>
             </ul>
           </div>
+        </br>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Update Info
+        </button>
           
         </div>
       </div>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Info</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <label for="exampleFormControlInput1" class="form-label">Address</label>
+              <input type="email" class="form-control" id="addressInput" placeholder="name@example.com">
+            </br>
+              <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+              <input type="email" class="form-control" id="phoneinput" placeholder="+2782315465">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button onclick="update()" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+
+      <script>
+        var test;
+        fetch("https://rdxa3m84qh.execute-api.us-east-1.amazonaws.com/test/accountwest").then(function(response){
+          return response.json();
+        }).then(function(myjson){
+          console.log("print data");
+          console.log(myjson.body[0][4]);
+          test = myjson.body[0][4] + " " + myjson.body[0][3]
+          document.querySelector("#address").innerHTML = myjson.body[0][2];
+          document.querySelector("#Name").innerHTML = test;
+          document.querySelector("#Phone").innerHTML = myjson.body[0][1];
+      
+        }).catch(function (error){
+          console.log("Error: "+ error);
+        });
+
+        function update(){
+
+          var userAddress;
+
+          userAddress = document.getElementById("addressInput").value;
+
+          var phonenumber;
+
+          phonenumber = document.getElementById("phoneinput").value;
+
+
+          let info = {
+            "Address": userAddress,
+            "PhoneNumber": phonenumber
+          }
+
+          const data = JSON.stringify(info); 
+
+
+
+
+          console.log(data);
+          
+          fetch("https://rdxa3m84qh.execute-api.us-east-1.amazonaws.com/test/updatewest", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          }).then(response => response.json()).then(data => {
+            console.log("success:", data);
+          }).catch((error) => {
+            console.error("error", error);
+          });
+        }
+
+
+      
+      
+      </script>
 
 
 
@@ -140,6 +221,7 @@
     
   </main>
 </div>
+
 
 
 
